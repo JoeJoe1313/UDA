@@ -27,7 +27,7 @@ DATA_PATH = "./lgg-mri-segmentation/kaggle_3m"
 BATCH_SIZE = 32
 N_CHANNELS = 3  # RGB images
 N_CLASSES = 1
-NUM_EPOCHS = 95
+NUM_EPOCHS = 94
 LEARNING_RATE = 0.001
 
 
