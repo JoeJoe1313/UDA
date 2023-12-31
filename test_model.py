@@ -19,11 +19,15 @@ torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
 
-MODEL = "./models/epoch_88.pt"
-
-
 if __name__ == "__main__":
     df_test = pd.read_csv("test.csv", usecols=["image_path", "mask_path"])
+    results = pd.read_csv("results.csv", index_col="epoch").sort_index()
+
+    # get the epoch for which the validation IoU is largest
+    max_val_iou = results["validation_iou"].max()
+    best_epoch = results[results["validation_iou"] == max_val_iou].index.values[0]
+    print(f"Best epoch is {best_epoch}")
+    model_path = f"./models/epoch_{best_epoch}.pt"
 
     # create dataset
     test_dataset = CustomDataset(
@@ -37,9 +41,7 @@ if __name__ == "__main__":
     model = UNet(ModelConstants.N_CHANNELS, ModelConstants.N_CLASSES)
     model.to(device)
     criterion = nn.BCEWithLogitsLoss()
-    checkpoint = torch.load(
-        MODEL, map_location=torch.device("cpu")
-    )  # model was trained on GPU, but tested on CPU
+    checkpoint = torch.load(model_path)
     model.load_state_dict(checkpoint["model_state_dict"])
 
     test_loader = DataLoader(
