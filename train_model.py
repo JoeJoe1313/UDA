@@ -53,6 +53,16 @@ if __name__ == "__main__":
     df_test = df[df.index.isin(test_patients)]
     df_val = df[df.index.isin(validation_patients)]
 
+    print(
+        f"Train dataset shape {df_train.shape} with {len(df_train.index.unique())} unique patients."
+    )
+    print(
+        f"Validation dataset shape {df_val.shape} with {len(df_val.index.unique())} unique patients."
+    )
+    print(
+        f"Test dataset shape: {df_test.shape} with {len(df_test.index.unique())} unique patients."
+    )
+
     # Create datasets
     train_dataset = CustomDataset(
         df_train,
