@@ -9,6 +9,7 @@ import torch.nn as nn
 import torch.optim as optim
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader
+from tqdm import tqdm
 
 from constants import ImagesTransforms, ModelConstants
 from unet import UNet
@@ -82,7 +83,7 @@ if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
-    for epoch in range(ModelConstants.NUM_EPOCHS):
+    for epoch in tqdm(range(ModelConstants.NUM_EPOCHS)):
         model.train()
         train_loss = 0
         train_iou = 0
