@@ -1,3 +1,6 @@
+"""Selects the model parameters corresponding to the epoch with highest
+validation IoU and evaluates the model with them on the test dataset.
+"""
 import random
 
 import numpy as np
@@ -29,7 +32,7 @@ if __name__ == "__main__":
     print(f"Best epoch is {best_epoch}")
     model_path = f"./models/epoch_{best_epoch}.pt"
 
-    # create dataset
+    # create test dataset
     test_dataset = CustomDataset(
         df_test,
         image_transform=ImagesTransforms.IMAGE_TRANSFORM,
@@ -62,5 +65,3 @@ if __name__ == "__main__":
     print(
         f"Test Loss: {test_loss / len(test_loader)}, Test IoU: {test_iou / len(test_loader)}"
     )
-
-# Test Loss: 0.01436641849935628, Test IoU: 0.85662147632012

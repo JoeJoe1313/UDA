@@ -1,3 +1,8 @@
+"""Performs the creation of train, validation, and test datasets, 
+the training and validation of the model while saving checkpoints 
+for each epoch in the `models` folder.
+"""
+
 import os
 import random
 from glob import glob
@@ -27,9 +32,10 @@ DATA_PATH = "./lgg-mri-segmentation/kaggle_3m"
 
 
 if __name__ == "__main__":
+    # create dataframe containing the paths to each image and
+    # its corresponding mask for each unique patient
     images = []
     masks = glob(os.path.join(DATA_PATH, "*/*_mask*"))
-
     for image_file in masks:
         images.append(image_file.replace("_mask", ""))
 
@@ -38,6 +44,7 @@ if __name__ == "__main__":
     df = df.set_index("patient")
     unique_patients = df.index.unique()
 
+    # split patients and create train, validation and test dataset
     train_patients, test_patients = train_test_split(
         unique_patients,
         test_size=0.1,
@@ -48,7 +55,6 @@ if __name__ == "__main__":
         test_size=0.2,
         random_state=RANDOM_STATE,
     )
-
     df_train = df[df.index.isin(train_patients)]
     df_test = df[df.index.isin(test_patients)]
     df_val = df[df.index.isin(validation_patients)]
@@ -63,7 +69,7 @@ if __name__ == "__main__":
         f"Test dataset shape: {df_test.shape} with {len(df_test.index.unique())} unique patients."
     )
 
-    # Create datasets
+    # create PyTorch datasets from Pandas dataframes
     train_dataset = CustomDataset(
         df_train,
         image_transform=ImagesTransforms.IMAGE_TRANSFORM,
@@ -74,7 +80,7 @@ if __name__ == "__main__":
         image_transform=ImagesTransforms.IMAGE_TRANSFORM,
         mask_transform=ImagesTransforms.MASK_TRANSFORM,
     )
-    df_test.to_csv("test.csv", index=False)  # for use in test_model.py & results.ipynb
+    df_test.to_csv("test.csv", index=False)  # for use in test_model.py
 
     model = UNet(ModelConstants.N_CHANNELS, ModelConstants.N_CLASSES)
     criterion = nn.BCEWithLogitsLoss()
@@ -92,7 +98,7 @@ if __name__ == "__main__":
     # check if CUDA is available and use it, otherwise stick with CPU
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
-
+    # train the model
     for epoch in tqdm(range(ModelConstants.NUM_EPOCHS)):
         model.train()
         train_loss = 0
@@ -118,7 +124,7 @@ if __name__ == "__main__":
                 output = model(data)
                 val_loss += criterion(output, target).item()
                 val_iou += calculate_iou(output, target).item()
-
+        # save checkpoint for each epoch to the models folder
         torch.save(
             {
                 "epoch": epoch,

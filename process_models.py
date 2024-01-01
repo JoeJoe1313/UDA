@@ -1,3 +1,8 @@
+"""Takes the checkpoints saved in the `models` folder, processses them 
+and produces a `results.csv` file containing information about each 
+epoch such as training loss, training iou, validation loss, validation iou.
+"""
+
 import os
 from glob import glob
 

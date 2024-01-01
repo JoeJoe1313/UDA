@@ -13,6 +13,7 @@ def extract_patient(path: str) -> str:
 
 
 def calculate_iou(pred, target, threshold=0.5):
+    """Calculates the IoU between two images."""
     pred = torch.sigmoid(pred)
     pred = pred > threshold
     target = target > threshold
@@ -24,14 +25,21 @@ def calculate_iou(pred, target, threshold=0.5):
     return iou.mean()
 
 
-def diagnosis(mask_path):
+def diagnosis(mask_path: str) -> bool:
+    """Checks wether a mask is all black,
+    and sets False if it is black (no tumor),
+    and True (tumor) otherwise.
+    """
     if np.max(cv2.imread(mask_path)) > 0:
-        return True  # tumor
+        return True
     else:
-        return False  # no tumor
+        return False
 
 
 def preprocess_image(image_path):
+    """Preprocess an image so it is in
+    the desired format for doing a prediction.
+    """
     transform = ImagesTransforms.IMAGE_TRANSFORM
     image = Image.open(image_path)
     image = transform(image)
