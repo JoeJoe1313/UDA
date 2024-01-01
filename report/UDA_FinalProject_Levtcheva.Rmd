@@ -279,7 +279,7 @@ Conversely, the reduced dataset presented a different scenario. Despite the trai
 
 In conclusion, this study underscores the balance between model complexity, dataset size, and generalization. Suggestions for future improvements of the model are scuh that images can be cropped excluding the high amount of useless background pixels, as well as working on segmenting and removing the skull and fat parts of the brain MRIs. Furthermore, the model can bu tuned to penalize false negatives more than it penalizes the false positives.
 
-# Repository and Realted Technical Details
+# Repository and Related Technical Details
 
 ### GitHub Repository
 
