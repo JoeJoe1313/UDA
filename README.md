@@ -1,6 +1,6 @@
 # Unstructured Data Analysis Final Project
 
-Brain MRI Segmentation
+Brain MRI Segmentation with U-Net
 
 # Introduction
 
